@@ -73,7 +73,9 @@ private:
 
 // additional variables as Snopt76 base class doesn't have them, not really
 // necessary but to keep the same structure of the original SnoptAdapter
-#ifdef SNOPT76
+#ifndef SNOPT76  
+#define SNOPT76 true
+#endif
 
 public:
   int     jacComputed = 0;
@@ -90,7 +92,6 @@ public:
   int     lenA, lenG, neA, neG;
   int    *iAfun, *jAvar, *iGfun, *jGvar;
   double *A;
-#endif
 };
 
 } /* namespace opt */

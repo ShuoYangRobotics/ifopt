@@ -38,6 +38,7 @@ SnoptAdapter::SnoptAdapter (Problem& ref)
 void
 SnoptAdapter::Init ()
 {
+  initialize("",1);
   int obj_count = nlp_->HasCostTerms()? 1 : 0;
   n     = nlp_->GetNumberOfOptimizationVariables();
   neF   = nlp_->GetNumberOfConstraints() + obj_count;
@@ -84,41 +85,48 @@ SnoptAdapter::Init ()
   ObjRow  = nlp_->HasCostTerms()? 0 : -1; // the row in user function that corresponds to the objective function
   ObjAdd  = 0.0;                          // the constant to be added to the objective function
 
+
+  // do not provide jacobian
   // no linear derivatives/just assume all are nonlinear
-  lenA = 0;
-  neA = 0;
-  iAfun = nullptr;
-  jAvar = nullptr;
-  A = nullptr;
+  // lenA = 0;
+  
+  // neA = 0;
+  // iAfun = nullptr;
+  // jAvar = nullptr;
+  // A = nullptr;
 
   // derivatives of nonlinear part
-  lenG  = obj_count*n + nlp_->GetJacobianOfConstraints().nonZeros();
-  iGfun = new int[lenG];
-  jGvar = new int[lenG];
+  // lenG  = obj_count*n + nlp_->GetJacobianOfConstraints().nonZeros();
+  // lenG  = obj_count*n;
+  // neG = 0;
+  // iGfun = new int[lenG];
+  // jGvar = new int[lenG];  
+  // iGfun = nullptr;
+  // jGvar = nullptr;
 
-  // the gradient terms of the cost function
-  neG=0; // nonzero cells in jacobian of Cost Function AND Constraints
+  // // the gradient terms of the cost function
+  // neG=0; // nonzero cells in jacobian of Cost Function AND Constraints
 
-  // the nonzero elements of cost function (assume all)
-  if(nlp_->HasCostTerms()) {
-    for (int var=0; var<n; ++var) {
-      iGfun[neG] = 0;
-      jGvar[neG] = var;
-      neG++;
-    }
-  }
+  // // the nonzero elements of cost function (assume all)
+  // if(nlp_->HasCostTerms()) {
+  //   for (int var=0; var<n; ++var) {
+  //     iGfun[neG] = 0;
+  //     jGvar[neG] = var;
+  //     neG++;
+  //   }
+  // }
 
-  // the nonzero elements of constraints (assume all)
-  auto jac = nlp_->GetJacobianOfConstraints();
-  for (int k=0; k<jac.outerSize(); ++k) {
-    for (Jacobian::InnerIterator it(jac,k); it; ++it) {
-      iGfun[neG] = it.row() + obj_count;
-      jGvar[neG] = it.col();
-      neG++;
-    }
-  }
+  // // the nonzero elements of constraints (assume all)
+  // auto jac = nlp_->GetJacobianOfConstraints();
+  // for (int k=0; k<jac.outerSize(); ++k) {
+  //   for (Jacobian::InnerIterator it(jac,k); it; ++it) {
+  //     iGfun[neG] = it.row() + obj_count;
+  //     jGvar[neG] = it.col();
+  //     neG++;
+  //   }
+  // }
 
-  setUserFun(&SnoptAdapter::ObjectiveAndConstraintFct);
+//  setUserFun(&SnoptAdapter::ObjectiveAndConstraintFct);
 }
 
 void
@@ -141,20 +149,21 @@ SnoptAdapter::ObjectiveAndConstraintFct (int* Status, int* n, double x[],
   }
 
 
-  if ( *needG > 0 ) {
-    int i=0;
+  // do not provide jacobian
+  // if ( *needG > 0 ) {
+  //   int i=0;
 
-    // the jacobian of the first row (cost function)
-    if (nlp_->HasCostTerms()) {
-      Eigen::VectorXd grad = nlp_->EvaluateCostFunctionGradient(x);
-      i = grad.rows();
-      Eigen::Map<VectorXd>(G, i) = grad;
-    }
+  //   // the jacobian of the first row (cost function)
+  //   if (nlp_->HasCostTerms()) {
+  //     Eigen::VectorXd grad = nlp_->EvaluateCostFunctionGradient(x);
+  //     i = grad.rows();
+  //     Eigen::Map<VectorXd>(G, i) = grad;
+  //   }
 
-    // the jacobian of all the constraints
-    nlp_->EvalNonzerosOfJacobian(x, G+i);
-    nlp_->SaveCurrent();
-  }
+  //   // the jacobian of all the constraints
+  //   nlp_->EvalNonzerosOfJacobian(x, G+i);
+  //   nlp_->SaveCurrent();
+  // }
 }
 
 void
