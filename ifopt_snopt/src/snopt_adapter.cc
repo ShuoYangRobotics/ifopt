@@ -126,6 +126,7 @@ SnoptAdapter::Init ()
   //   }
   // }
 
+
 //  setUserFun(&SnoptAdapter::ObjectiveAndConstraintFct);
 }
 

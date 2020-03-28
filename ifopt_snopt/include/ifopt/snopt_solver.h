@@ -29,6 +29,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <ifopt/problem.h>
 #include <ifopt/solver.h>
+#include <cstring>
+#include <vector>
 
 namespace ifopt {
 
@@ -46,6 +48,19 @@ public:
    * @param [in/out]  nlp  The specific problem to be used and modified.
    */
   void Solve(Problem& nlp) override ;
+  void SetOption (const std::string& name, int value);
+  void SetOption (const std::string& name, double value);
+  void SetOption (const std::string& name);
+
+private:
+  std::vector<std::string> intParamName;
+  std::vector<int> intParamVal;
+
+  std::vector<std::string> realParamName;
+  std::vector<double> realParamVal;
+
+  std::vector<std::string> charParamName;
+
 };
 
 } /* namespace ifopt */

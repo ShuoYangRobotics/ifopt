@@ -134,9 +134,12 @@ bool IpoptAdapter::eval_jac_g(Index n, const double* x, bool new_x,
 	      nele++;
 	    }
 	  }
+    // std::cout << "jac.nonzero is " << jac.nonZeros() << std::endl;
+    // std::cout << "nele is " << nele << std::endl;
+    // std::cout << "nele_jac is " << nele_jac << std::endl;
 	}
-
-    assert(nele == nele_jac); // initial sparsity structure is never allowed to change
+    // 2020-03-22, this is necessary, because if some 
+    // assert(nele == nele_jac); // initial sparsity structure is never allowed to change
   }
   else {
     // only gets used if "jacobian_approximation finite-difference-values" is not set

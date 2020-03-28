@@ -38,16 +38,33 @@ SnoptSolver::Solve (Problem& ref)
   // A complete list of options can be found in the snopt user guide:
   // https://web.stanford.edu/group/SOL/guides/sndoc7.pdf
   snopt.setProbName( "snopt" );
-  snopt.setIntParameter( "Major Print level", 1 );
-  snopt.setIntParameter( "Minor Print level", 1 );
-  snopt.setIntParameter( "Derivative option", 0 ); // 1 = snopt will not calculate missing derivatives
-  snopt.setIntParameter( "Verify level ", 3 ); // full check on gradients, will throw error
-  snopt.setIntParameter("Iterations limit", 200000);
-  snopt.setRealParameter( "Major feasibility tolerance",  1.0e-4); // target nonlinear constraint violation
-  snopt.setRealParameter( "Minor feasibility tolerance",  1.0e-4); // for satisfying the QP bounds
-  snopt.setRealParameter( "Major optimality tolerance",   1.0e-2); // target complementarity gap
+  // snopt.setIntParameter( "Major Print level", 1 );
+  // snopt.setIntParameter( "Minor Print level", 1 );
+  // snopt.setIntParameter( "Derivative option", 0 ); // 1 = snopt will not calculate missing derivatives
+  // snopt.setIntParameter( "Verify level ", 3 ); // full check on gradients, will throw error
+  // snopt.setIntParameter("Iterations limit", 200000);
+  // snopt.setRealParameter( "Major feasibility tolerance",  1.0e-4); // target nonlinear constraint violation
+  // snopt.setRealParameter( "Minor feasibility tolerance",  1.0e-4); // for satisfying the QP bounds
+  // snopt.setRealParameter( "Major optimality tolerance",   1.0e-2); // target complementarity gap
+  
+  for (int i = 0; i < intParamName.size();i++) 
+  {
+    std::string name = intParamName[i];
+    int value = intParamVal[i];
+    snopt.setIntParameter( name.c_str(), value );
+  }
 
-
+  for (int i = 0; i < realParamName.size();i++) 
+  {
+    std::string name = realParamName[i];
+    int value = realParamVal[i];
+    snopt.setRealParameter( name.c_str(), value );
+  }
+  for (int i = 0; i < charParamName.size();i++) 
+  {
+    std::string name = charParamName[i];
+    snopt.setParameter( name.c_str() );
+  }
   // error codes as given in the manual.
   int Cold = 0; // Basis = 1, Warm = 2;
 
@@ -79,12 +96,29 @@ SnoptSolver::Solve (Problem& ref)
 
   int EXIT = INFO - INFO%10; // change least significant digit to zero
 
-  if (EXIT != 0) {
-    std::string msg = "ERROR: Snopt failed to find a solution. EXIT:" + std::to_string(EXIT) + ", INFO:" + std::to_string(INFO) + "\n";
-    throw std::runtime_error(msg);
-  }
+  // if (EXIT != 0 && EXIT != 40) {
+  //   std::string msg = "ERROR: Snopt failed to find a solution. EXIT:" + std::to_string(EXIT) + ", INFO:" + std::to_string(INFO) + "\n";
+  //   throw std::runtime_error(msg);
+  // }
 
   snopt.SetVariables();
+}
+
+void SnoptSolver::SetOption (const std::string& name, int value) 
+{
+  intParamName.push_back(name);
+  intParamVal.push_back(value);
+}
+
+void SnoptSolver::SetOption (const std::string& name, double value)
+{
+  realParamName.push_back(name);
+  realParamVal.push_back(value);
+}
+
+void SnoptSolver::SetOption (const std::string& name) 
+{
+  charParamName.push_back(name);
 }
 
 } /* namespace ifopt */
