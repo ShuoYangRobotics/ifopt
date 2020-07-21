@@ -126,7 +126,6 @@ bool IpoptAdapter::eval_jac_g(Index n, const double* x, bool new_x,
 	  }
 	}
 	else {	// sparse jacobian
-    nlp_->SetVariables(x);
 	  auto jac = nlp_->GetJacobianOfConstraints();
 	  for (int k=0; k<jac.outerSize(); ++k) {
 	    for (Jacobian::InnerIterator it(jac,k); it; ++it) {
@@ -143,7 +142,6 @@ bool IpoptAdapter::eval_jac_g(Index n, const double* x, bool new_x,
     // assert(nele == nele_jac); // initial sparsity structure is never allowed to change
   }
   else {
-    nlp_->SetVariables(x);
     // only gets used if "jacobian_approximation finite-difference-values" is not set
     nlp_->EvalNonzerosOfJacobian(x, values);
   }

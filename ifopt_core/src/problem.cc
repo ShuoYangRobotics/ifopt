@@ -136,10 +136,24 @@ Problem::HasCostTerms () const
 void
 Problem::EvalNonzerosOfJacobian (const double* x, double* values)
 {
+  SetVariables(x);
   Jacobian jac = GetJacobianOfConstraints();
 
   jac.makeCompressed(); // so the valuePtr() is dense and accurate
-  std::copy(jac.valuePtr(), jac.valuePtr() + jac.nonZeros(), values);
+  values = new double[jac.nonZeros()];
+  for (int i = 0; i < jac.nonZeros(); i++) {
+    values[i] = *(jac.valuePtr()+i);
+  }  
+  // std::cout << "------------------" <<std::endl;
+  // for (int i = 0; i < jac.nonZeros(); i++) {
+  //   std::cout << std::setprecision(13)  << values[i] << std::endl;
+  // }
+  // std::cout << "******************" <<std::endl;
+  // std::copy(jac.valuePtr(), jac.valuePtr() + jac.nonZeros(), values);
+  // for (int i = 0; i < jac.nonZeros(); i++) {
+  //   std::cout << std::setprecision(13)  << values[i] << std::endl;
+  // }
+
 }
 
 Problem::Jacobian
