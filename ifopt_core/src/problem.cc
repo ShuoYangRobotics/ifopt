@@ -136,7 +136,6 @@ Problem::HasCostTerms () const
 void
 Problem::EvalNonzerosOfJacobian (const double* x, double* values)
 {
-  SetVariables(x);
   Jacobian jac = GetJacobianOfConstraints();
 
   jac.makeCompressed(); // so the valuePtr() is dense and accurate
@@ -147,6 +146,12 @@ Problem::Jacobian
 Problem::GetJacobianOfConstraints () const
 {
   return constraints_.GetJacobian();
+}
+
+Problem::Jacobian
+Problem::GetJacobianOfCosts () const
+{
+  return costs_.GetJacobian();
 }
 
 void

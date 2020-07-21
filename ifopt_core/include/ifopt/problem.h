@@ -205,6 +205,14 @@ public:
   Jacobian GetJacobianOfConstraints() const;
 
   /**
+   * @brief The sparse-matrix representation of Jacobian of the costs.
+   *
+   * Returns one row corresponding to the costs and each column corresponding
+   * to an optimizaton variable.
+   */
+  Jacobian GetJacobianOfCosts () const;
+
+  /**
    * @brief Saves the current values of the optimization variables in x_prev.
    *
    * This is used to keep a history of the values for each NLP iterations.
@@ -235,6 +243,18 @@ public:
    * @brief Prints the variables, costs and constraints.
    */
   void PrintCurrent() const;
+
+  /**
+   * @brief Read access to the constraints composite
+   * @return A const reference to constraints_
+   */
+  const Composite& GetConstraints() const { return constraints_; };
+
+  /**
+   * @brief Read access to the costs composite
+   * @return A const reference to costs_
+   */
+  const Composite& GetCosts() const { return costs_; };
 
 private:
   Composite::Ptr variables_;
